@@ -1,29 +1,19 @@
 <template>
 	<div id="app">
-		<!--		<div>-->
-<!--			<navmenu-->
-<!--			/>-->
-<!--		</div>-->
-<!--		<router-view/>-->
 		<canvas id="mycanvas">
 		</canvas>
-<!--		<el-button :onclick="moveGO" type="primary">action</el-button>-->
 	</div>
 </template>
 <script>
-      // import modalWindow from './components/modalWindow'
-      // import navmenu from "./components/navmenu";
   import * as PIXI from 'pixi.js';
   export default {
     mounted() {
       this.mainAction();
     },
     data() {
-      return{
-      }
+      return {}
     },
-    computed: {
-    },
+    computed: {},
     methods: {
       mainAction() {
         const canvas = document.getElementById('mycanvas');
@@ -34,9 +24,6 @@
         });
         document.body.appendChild(app.view);
         let loader = new PIXI.Loader;
-        let roulette = new PIXI.Container();
-        let random = 7;
-        let mainArray = [];
         loader
         .add("/img1.jpg")
         .add('/img2.jpg')
@@ -47,10 +34,12 @@
         .add('/img7.jpg')
         .add('/button.png')
         .load(setup);
-        let ifState = false;
+        let getRand = (min, max) => {
+          return Math.floor(Math.random() * (max - min) ) + min;
+        };
 
-        let state = play;
         function setup() {
+          console.log(getRand(1,8));
           let button = new PIXI.Sprite(loader.resources['/button.png'].texture);
           button.scale.x = 0.3;
           button.scale.y = 0.3;
@@ -60,62 +49,111 @@
           button.interactive = true;
           button.on('mousedown', myFunc);
           function myFunc() {
-            ifState = true;
-          }
-          for (let i = 1; i < 8; i++) {
-            let img = new PIXI.Sprite(loader.resources[`/img${i}.jpg`].texture);
-            img.y = 150 * (i - 1) - 150;
-            // console.log(img.y);
-            img.alpha = 0.991 + i;
-            mainArray.push(img);
-            roulette.addChild(img);
-          }
-          console.log(roulette.children);
-          console.log(mainArray);
-          app.stage.addChild(roulette);
-          app.ticker.add(gameLoop);
-        }
-        function gameLoop(delta) {
-          state(delta);
-        }
-        function play() {
-          if (ifState){
-            roulette.children.forEach(checkY);
-          }
-          function checkY(element) {
-            element.y += 15;
-                // console.log(roulette.children[random-1].y);
-            if(element.y > 900){
-              roulette.removeChild(element);
+            app.ticker.add(gameLoop);
+            slot1.ifState = true;
+            slot2.ifState = true;
+            slot3.ifState = true;
+            slot4.ifState = true;
+            slot5.ifState = true;
             }
-            if(roulette.children.length < 7 && roulette.children.length > 5){
-              element.x = 0;
-              element.y = -150;
-              roulette.addChildAt(element, 0)
+          class Create {
+            constructor(options) {
+              this.ifState = options.ifState;
+              this.x = options.x;
+              this.roulette = options.roulette;
+              this.mainArray = options.mainArray;
+              this.slotSpeed = options.slotSpeed;
+              for (let i = 1; i < 8; i++) {
+                let img = new PIXI.Sprite(loader.resources[`/img${i}.jpg`].texture);
+                img.y = 150 * (i - 1) - 150;
+                img.x = this.x;
+                img.alpha = 0.991 + i;
+                this.mainArray.push(img);
+                this.roulette.addChild(img);
+                app.stage.addChild(this.roulette);
+              }
+              console.log(this.roulette);
+              console.log(this.mainArray)
             }
-            setTimeout(checkAlpha, 8000);
-            function checkAlpha(){
-              if (roulette.children[3].alpha === mainArray[random - 1].alpha){
-                console.log(roulette.children[3]);
-                console.log(mainArray[random - 1]);
-                ifState = false
+            play(slot, rand) {
+              if (slot.ifState) {
+                slot.roulette.children.forEach(checkY);
+              }
+              function checkY(element) {
+                element.y += slot.slotSpeed;
+                if (element.y > 900) {
+                  slot.roulette.removeChild(element);
+                }
+                if (slot.roulette.children.length < 7 && slot.roulette.children.length > 5) {
+                  element.y = -150;
+                  slot.roulette.addChildAt(element, 0);
+                  setTimeout(checkAlpha, slot.sec);
+                }
+              }
+              function checkAlpha() {
+                if (slot.roulette.children[3].alpha === slot.mainArray[rand - 1].alpha) {
+                  slot.ifState = false;
+                  slot.slotSpeed = 10
+                }
               }
             }
-            
-            // if(roulette.children[3].alpha === mainArray[3].alpha){
-            //   console.log('false');
-              // console.log(roulet;te.children);
-              // console.log(chosenPic);
-              // console.log(roulette.children[random]);
+          }
+          let slot1 = new Create({
+            x: 600,
+            roulette: new PIXI.Container(),
+            mainArray: [],
+            ifState: false,
+            sec: 9000,
+            slotSpeed: 10
+          });
+          let slot2 = new Create({
+            x: 450,
+            roulette: new PIXI.Container(),
+            mainArray: [],
+            ifState: false,
+            sec: 10000,
+            slotSpeed: 10
+          });
+          let slot3 = new Create({
+            x: 300,
+            roulette: new PIXI.Container(),
+            mainArray: [],
+            ifState: false,
+            sec: 11000,
+            slotSpeed: 10
+          });
+          let slot4 = new Create({
+            x: 0,
+            roulette: new PIXI.Container(),
+            mainArray: [],
+            ifState: false,
+            sec: 12000,
+            slotSpeed: 10
+          });
+          let slot5 = new Create({
+            x: 150,
+            roulette: new PIXI.Container(),
+            mainArray: [],
+            ifState: false,
+            sec: 13000,
+            slotSpeed: 10
+          });
+          function gameLoop() {
+            slot1.play(slot1, getRand(1,8));
+            slot2.play(slot2, getRand(1,8));
+            slot3.play(slot3, getRand(1,8));
+            slot4.play(slot4, getRand(1,8));
+            slot5.play(slot5, getRand(1,8));
+            // console.log(slot2)
           }
         }
       },
     },
-    components: {
+      components: {
         // navmenu,
         // modalWindow: modalWindow
-    },
-  }
+      },
+    }
 	</script>
 <style>
 	body{
