@@ -1,10 +1,11 @@
 <template>
 	<div id="app">
-<!--		<el-button :onclick="initServ" type="primary">Primary</el-button>-->
+		<!--		<el-button :onclick="initServ" type="primary">Primary</el-button>-->
 	</div>
 </template>
 <script>
   import server from '../src/components/server'
+
   export default {
     async mounted() {
       this.initServ()
@@ -12,23 +13,22 @@
     data() {
       return {
         mainData: server,
-        lastId:'',
-        result:'',
-        mainArray:[],
+        lastId: '',
+        result: '',
+        mainArray: [],
         index: 0,
-        lastHash:''
+        lastHash: ''
       }
     },
-    computed: {
-    },
+    computed: {},
     methods: {
       //  {
 
       // https://my-json-server.typicode.com/obosovvv/server/db
-      async initServ(){
+      async initServ() {
         let getObj = (element) => {
           console.log(this.lastId);
-          if(this.lastId === element.data.hash){
+          if (this.lastId === element.data.hash) {
             return element
           }
         };
@@ -52,7 +52,7 @@
           // };
         };
         const getObjByHash = (element) => {
-          if(this.lastHash === element.data.precedingHash){
+          if (this.lastHash === element.data.precedingHash) {
             return element
           }
         };
