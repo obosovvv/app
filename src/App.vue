@@ -1,14 +1,9 @@
 <template>
 	<div id="app">
-		<pageRegistrationStep2one/>
-		<pageRegistrationStep2/>
-		<pageRegistration/>
+		<router-view/>
 	</div>
 </template>
 <script>
-	import pageRegistrationStep2one from "./components/pageRegistrationStep2one";
-  import pageRegistrationStep2 from "./components/pageRegistrationStep2";
-  import pageRegistration from "./components/pageResitration";
   export default {
     async mounted() {
     },
@@ -20,9 +15,6 @@
     methods: {
     },
     components: {
-      pageRegistrationStep2one,
-      pageRegistrationStep2,
-      pageRegistration
     },
   }
 </script>
@@ -33,6 +25,4 @@
 		-moz-osx-font-smoothing: grayscale
 		
 	}
-	
-	
 </style>
